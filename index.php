@@ -1,6 +1,8 @@
 <?php
 include("header.php");
 include("menu.php");
+require_once("DataRequest.php");
+$dados = new DataRequest();
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -120,7 +122,7 @@ include("menu.php");
         <div class="row">
             <div class="col-md-12">
                 <!-- BEGIN SAMPLE TABLE PORTLET-->
-                <div class="portlet box grey">
+                <div class="portlet box grey" id="tabela">
                     <div class="portlet-title">
                         <div class="caption">
                             <i class="fa fa-folder-open"></i>Tabela Simples
@@ -242,6 +244,29 @@ include("menu.php");
     </div>
 </div>
 <!-- END CONTENT -->
+<script>
+    document.querySelectorAll('.dashboard-stat .more').forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            var statDiv = this.closest('.dashboard-stat');
+            var cor = Array.from(statDiv.classList).find(function(cls) {
+                return cls !== 'dashboard-stat';
+            });
+            var cores = ['blue', 'green', 'purple'];
+
+            var tabela = document.getElementById('tabela');
+
+            cores.forEach(function(c) {
+                tabela.classList.remove(c);
+            });
+
+            if (cores.includes(cor)) {
+                tabela.classList.add(cor);
+            }
+        });
+    });
+</script>
 <?php
 include("footer.php");
 ?>
