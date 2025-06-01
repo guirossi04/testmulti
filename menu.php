@@ -1,3 +1,20 @@
+<?php
+$menu = [
+    "Cadastro" => [
+        ["cadCliente", "Cliente"],
+        ["cadFornecedor", "Fornecedor"],
+        ["cadProduto", "Produto"],
+        ["perfilAcesso", "Perfil de Acesso"],
+        ["cadUsuario", "Usuario"],
+    ],
+    "Relatorio" => [
+        ["relCliente", "Cliente"],
+        ["relFornecedor", "Faturamento"],
+        ["relProdutos", "Produtos"],
+    ]
+];
+
+?>
 <div class="clearfix">
 </div>
 <!-- BEGIN CONTAINER -->
@@ -37,49 +54,27 @@
                     </a>
                 </li>
                 <!--Cliente-->
-                <li class="">
-                    <a href="javascript:;">
-                        <i class="fa fa-file-text"></i>
-                        <span class="title">
-                            Cadastro
-                        </span>
-                        <span class="arrow ">
-                        </span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="#">Cliente</a>
-                        </li>
-                        <li>
-                            <a href="#">Fornecedor</a>
-                        </li>
-                        <li>
-                            <a href="#">Usuário</a>
-                        </li>
-                    </ul>
-                </li>
-                <!--Relatorio-->
-                <li class="">
-                    <a href="javascript:;">
-                        <i class="fa fa-bar-chart-o"></i>
-                        <span class="title">
-                            Relatório
-                        </span>
-                        <span class="arrow ">
-                        </span>
-                    </a>
-                    <ul class="sub-menu">
-                        <li>
-                            <a href="#">Cliente</a>
-                        </li>
-                        <li>
-                            <a href="#">Faturamento</a>
-                        </li>
-                    </ul>
-                </li>
+                <?php foreach ($menu as $key => $opt):?>
+                    <li class="">
+                        <a href="javascript:;">
+                            <i class="fa fa-file-text"></i>
+                            <span class="title">
+                                <?=$key?>
+                            </span>
+                            <span class="arrow ">
+                            </span>
+                        </a>
+                        <ul class="sub-menu">
+                            <?php foreach ($opt as $item): ?>
+                                <li>
+                                    <a href="<?=$item[0]?>"><?=$item[1]?></a>
+                                </li>
+                            <?php endforeach ?>
+                        </ul>
+                    </li>
+                <?php endforeach ?>
             </ul>
             <!-- END SIDEBAR MENU -->
         </div>
     </div>
     <!-- END SIDEBAR -->
-    
