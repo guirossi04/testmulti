@@ -150,3 +150,20 @@ class DataRequest {
         }
     }
 }
+
+$dados = new DataRequest();
+$tipo = $_GET['tipo'] ?? '';
+
+switch ($tipo) {
+    case 'clientes':
+        echo json_encode($dados->dadosClientes());
+        break;
+    case 'usuarios':
+        echo json_encode($dados->dadosUsuarios());
+        break;
+    case 'fornecedores':
+        echo json_encode($dados->dadosFornecedores());
+        break;
+    default:
+        echo json_encode(['erro' => 'Tipo inválido']);
+}

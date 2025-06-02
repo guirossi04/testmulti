@@ -2,7 +2,6 @@
 include("header.php");
 include("menu.php");
 require_once("DataRequest.php");
-$dados = new DataRequest();
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -136,7 +135,7 @@ $dados = new DataRequest();
                     </div>
                     <div class="portlet-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="tabela-simples">
                                 <thead>
                                     <tr>
                                         <th>
@@ -146,93 +145,20 @@ $dados = new DataRequest();
                                             Nome
                                         </th>
                                         <th>
-                                            Sobrenome
+                                            cpf
                                         </th>
                                         <th>
-                                            Usuario
+                                            endereco
                                         </th>
                                         <th>
-                                            Status
+                                            telefone
+                                        </th>
+                                        <th>
+                                            email
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            Mark
-                                        </td>
-                                        <td>
-                                            Otto
-                                        </td>
-                                        <td>
-                                            makr124
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-success">
-                                                Aprovado
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            2
-                                        </td>
-                                        <td>
-                                            Jacob
-                                        </td>
-                                        <td>
-                                            Nilson
-                                        </td>
-                                        <td>
-                                            jac123
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-info">
-                                                Pendente
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            3
-                                        </td>
-                                        <td>
-                                            Larry
-                                        </td>
-                                        <td>
-                                            Cooper
-                                        </td>
-                                        <td>
-                                            lar
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-warning">
-                                                Suspenso
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            4
-                                        </td>
-                                        <td>
-                                            Sandy
-                                        </td>
-                                        <td>
-                                            Lim
-                                        </td>
-                                        <td>
-                                            sanlim
-                                        </td>
-                                        <td>
-                                            <span class="label label-sm label-danger">
-                                                Bloqueado
-                                            </span>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -248,22 +174,56 @@ $dados = new DataRequest();
     document.querySelectorAll('.dashboard-stat .more').forEach(function(link) {
         link.addEventListener('click', function(event) {
             event.preventDefault();
-
+            let cont = 1;
             var statDiv = this.closest('.dashboard-stat');
             var cor = Array.from(statDiv.classList).find(function(cls) {
                 return cls !== 'dashboard-stat';
             });
-            var cores = ['blue', 'green', 'purple'];
-
+            var cores = ['blue', 'green', 'purple', 'grey'];
             var tabela = document.getElementById('tabela');
+            const classes = Array.from(statDiv.classList);
 
-            cores.forEach(function(c) {
-                tabela.classList.remove(c);
-            });
+            let tipo = '';
+            if (classes.includes('blue')) tipo = 'clientes';
+            if (classes.includes('green')) tipo = 'usuarios';
+            if (classes.includes('purple')) tipo = 'fornecedores';
 
-            if (cores.includes(cor)) {
-                tabela.classList.add(cor);
-            }
+            fetch('DataRequest.php?tipo=' + tipo)
+                .then(response => response.json())
+                .then(dados => {
+                    const tbody = document.querySelector('#tabela-simples tbody');
+                    tbody.innerHTML = '';
+
+                    if (dados.erro) {
+                        tbody.innerHTML = `<tr><td colspan="3">${dados.erro}</td></tr>`;
+                        return;
+                    }
+
+                    cores.forEach(function(c) {
+                        tabela.classList.remove(c);
+                    });
+
+                    if (cores.includes(cor)) {
+                        tabela.classList.add(cor);
+                    }
+
+                    dados.forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                        <td>${cont}</td>
+                        <td>${item.nome ?? 'N/A'}</td>
+                        <td>${item.cpf ?? 'N/A'}</td>
+                        <td>${item.endereco ?? 'N/A'}</td>
+                        <td>${item.telefone ?? 'N/A'}</td>
+                        <td>${item.email ?? 'N/A'}</td>
+                    `;
+                        tbody.appendChild(tr);
+                        cont++;
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                });
         });
     });
 </script>
